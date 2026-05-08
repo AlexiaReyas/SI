@@ -1,47 +1,61 @@
-<?= view('partials/header', ['title' => 'Recommandations']) ?>
-<div class="row g-4">
-    <div class="col-lg-4">
-        <div class="card p-4">
-            <h2 class="section-title">Resultats</h2>
-            <p class="text-muted mb-1">IMC</p>
-            <p class="display-6 mb-3"><?= esc($imc) ?></p>
-            <p>Objectif deduit: <span class="badge badge-goal"><?= esc($goal) ?></span></p>
-        </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="card p-4">
-            <h3 class="section-title mb-3">Regime recommande</h3>
-            <?php if ($regime): ?>
-                <p class="h5 mb-1"><?= esc($regime['name']) ?></p>
-                <p class="text-muted"><?= esc($regime['description']) ?></p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>Duree: <?= esc($regime['duration_days']) ?> jours</p>
-                        <p>Variation poids: <?= esc($regime['weight_change_kg']) ?> kg</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p>Viande <?= esc($regime['pct_meat']) ?>% | Poisson <?= esc($regime['pct_fish']) ?>% | Volaille <?= esc($regime['pct_poultry']) ?>%</p>
-                        <p>Prix: <?= number_format($price, 2) ?> Ar</p>
-                        <?php if ($discount > 0): ?>
-                            <p>Remise Gold: -<?= number_format($discount, 2) ?> Ar</p>
-                        <?php endif; ?>
-                        <p class="fw-bold">Total: <?= number_format($finalPrice, 2) ?> Ar</p>
+<?= view('partials/header', ['title' => 'Mes Suggestions - NutriFit']) ?>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-gold"><i class="fa-solid fa-clipboard-list me-2"></i>Vos Suggestions</h2>
+    <!-- Bouton d'export PDF en haut à droite -->
+    <a href="<?= base_url('recommendations/export_pdf') ?>" target="_blank" class="btn btn-outline-danger">
+        <i class="fa-solid fa-file-pdf me-2"></i>Exporter en PDF
+    </a>
+</div>
+
+<p class="text-muted mb-4">Basé sur votre IMC de <strong><?= esc($user['imc'] ?? '--') ?></strong> et votre objectif (<strong><?= esc($user['objectif_label'] ?? 'Non défini') ?></strong>).</p>
+
+<div class="row">
+    <!-- Colonne Régime -->
+    <div class="col-md-6 mb-4">
+        <div class="card card-custom h-100 p-4 border-success">
+            <div class="text-center mb-3">
+                <i class="fa-solid fa-utensils fa-3x text-success mb-2"></i>
+                <h4 class="fw-bold text-success">Régime Alimentaire</h4>
+            </div>
+            <?php if(empty($regimes)): ?>
+                <p class="text-center text-muted">Aucun régime suggéré pour le moment.</p>
+            <?php else: ?>
+                <?php foreach($regimes as $regime): ?>
+                <div class="bg-dark p-3 rounded mb-3 border border-secondary">
+                    <h5 class="text-light"><?= esc($regime['nom']) ?></h5>
+                    <p class="small text-muted mb-2"><?= esc($regime['description']) ?></p>
+                    <div class="d-flex justify-content-between small">
+                        <span class="badge bg-success"><i class="fa-solid fa-carrot me-1"></i>Viande: <?= esc($regime['viande_pct']) ?>%</span>
+                        <span class="badge bg-info"><i class="fa-solid fa-fish me-1"></i>Poisson: <?= esc($regime['poisson_pct']) ?>%</span>
+                        <span class="badge bg-warning text-dark"><i class="fa-solid fa-drumstick-bite me-1"></i>Volaille: <?= esc($regime['volaille_pct']) ?>%</span>
                     </div>
                 </div>
-            <?php else: ?>
-                <p>Aucun regime disponible.</p>
+                <?php end/foreach; ?>
             <?php endif; ?>
         </div>
-        <div class="card p-4 mt-4">
-            <h3 class="section-title">Activite sportive</h3>
-            <?php if ($activity): ?>
-                <p class="h5 mb-1"><?= esc($activity['name']) ?></p>
-                <p class="text-muted"><?= esc($activity['description']) ?></p>
-                <p>Duree: <?= esc($activity['duration_minutes']) ?> minutes</p>
+    </div>
+
+    <!-- Colonne Activité (Correction de l'icône et titre) -->
+    <div class="col-md-6 mb-4">
+        <div class="card card-custom h-100 p-4 border-primary">
+            <div class="text-center mb-3">
+                <i class="fa-solid fa-person-running fa-3x text-primary mb-2"></i>
+                <h4 class="fw-bold text-primary">Activité Sportive</h4>
+            </div>
+            <?php if(empty($activites)): ?>
+                <p class="text-center text-muted">Aucune activité suggérée pour le moment.</p>
             <?php else: ?>
-                <p>Aucune activite disponible.</p>
+                <?php foreach($activites as $activite): ?>
+                <div class="bg-dark p-3 rounded mb-3 border border-secondary">
+                    <h5 class="text-light"><?= esc($activite['nom']) ?></h5>
+                    <p class="small text-muted mb-2"><?= esc($activite['description']) ?></p>
+                    <span class="badge bg-primary"><i class="fa-solid fa-fire me-1"></i>Impact estimé: Élevé</span>
+                </div>
+                <?php end/foreach; ?>
             <?php endif; ?>
         </div>
     </div>
 </div>
+
 <?= view('partials/footer') ?>
