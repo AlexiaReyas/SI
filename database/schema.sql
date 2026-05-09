@@ -140,3 +140,20 @@ INSERT INTO `composition_regime_officiel` (`regime_id`, `pourcentage_viande`, `p
 (3, 30, 50, 20),
 (4, 35, 45, 20),
 (5, 60, 20, 20);
+
+INSERT INTO `sports` (`nom`, `calories_par_heure`, `difficulte`, `description`) VALUES
+('Marche rapide', 250, 'Facile', 'Idéal pour débuter, accessible à tous'),
+('Course à pied', 600, 'Moyen', 'Excellent pour brûler des calories'),
+('Natation', 500, 'Moyen', 'Sport complet, doux pour les articulations'),
+('Vélo', 400, 'Facile', 'Bon pour l''endurance'),
+('Musculation', 350, 'Difficile', 'Pour prendre du muscle');
+
+INSERT INTO `regime_sports` (`regime_id`, `sport_id`, `duree_recommandee_minutes`, `jours_par_semaine`) VALUES
+(1, 5, 45, 3),
+(1, 4, 30, 2),
+(2, 1, 30, 5),
+(2, 3, 40, 2),
+(3, 2, 45, 4),
+(3, 3, 60, 3),
+(4, 1, 30, 3),
+(5, 5, 60, 4);
