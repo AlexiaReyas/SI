@@ -42,4 +42,23 @@ class MesureModel extends Model
                     ->orderBy('date_mesure', 'DESC')
                     ->first();
     }
+
+    /**
+     * Retourne les utilisateurs ayant le plus progressé en termes de variation de poids.
+     *
+     * @param int $limit
+     * @return array
+     */
+    public function getTopProgressUsers($limit = 5)
+    {
+        $builder = $this->db->table('mesures_utilisateur');
+        $builder->select('utilisateurs.id as user_id, utilisateurs.nom, MAX(mesures_utilisateur.poids) - MIN(mesures_utilisateur.poids) as progression')
+                ->join('utilisateurs', 'utilisateurs.id = mesures_utilisateur.user_id')
+                ->groupBy('mesures_utilisateur.user_id')
+                ->orderBy('progression', 'DESC')
+                ->limit($limit);
+
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
 }
