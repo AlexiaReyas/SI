@@ -36,4 +36,43 @@ class CodePromoModel extends Model
                     ->set('utilisations_actuelles', 'utilisations_actuelles + 1', false)
                     ->update();
     }
+
+    /**
+     * Utilise un code promo pour un utilisateur.
+     *
+     * @param int $user_id
+     * @param string $code
+     * @return array
+     */
+    public function utiliserCode($user_id, $code)
+    {
+        $portemonnaieModel = new \App\Models\PortemonnaieModel();
+        $utilisationCodeModel = new \App\Models\UtilisationCodeModel();
+
+        // Valider le code promo
+        $codePromo = $this->validerCode($code);
+
+        if (!$codePromo) {
+            return ['success' => false, 'message' => 'Code invalide ou expiré.'];
+        }
+
+        // Ajouter l'argent au porte-monnaie de l'utilisateur
+        $nouveauSolde = $portemonnaieModel->ajouterArgent($user_id, $codePromo['valeur']);
+
+        // Incrémenter l'utilisation du code promo
+        $this->incrementUtilisation($codePromo['id']);
+
+        // Enregistrer l'utilisation dans la table utilisation_codes
+        $utilisationCodeModel->insert([
+            'user_id' => $user_id,
+            'code_id' => $codePromo['id'],
+            'date_utilisation' => date('Y-m-d H:i:s')
+        ]);
+
+        return [
+            'success' => true,
+            'message' => $codePromo['valeur'] . '€ ajoutés',
+            'nouveau_solde' => $nouveauSolde
+        ];
+    }
 }
