@@ -119,3 +119,10 @@ CREATE TABLE `utilisation_codes` (
   FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`code_id`) REFERENCES `codes_promo`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `utilisateurs` (`nom`, `email`, `mot_de_passe`, `genre`, `taille`, `poids_initial`, `est_gold`, `date_inscription`) VALUES
+('Alice Martin', 'alice@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'femme', 165, 58.00, 1, '2026-01-15'),
+('Bernard Dubois', 'bernard@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'homme', 180, 85.00, 0, '2026-02-20'),
+('Claire Petit', 'claire@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'femme', 160, 52.00, 1, '2026-03-10'),
+('David Leroy', 'david@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'homme', 175, 70.00, 0, '2026-03-25'),
+('Emma Richard', 'emma@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'femme', 170, 65.00, 1, '2026-04-01');
