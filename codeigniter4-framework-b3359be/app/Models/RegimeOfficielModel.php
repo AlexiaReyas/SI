@@ -43,4 +43,31 @@ class RegimeOfficielModel extends Model
         $query = $builder->get();
         return $query->getRowArray();
     }
+
+    /**
+     * Retourne le régime le plus populaire pour un objectif donné.
+     *
+     * @param string $objectif
+     * @return array|null
+     */
+    public function getMeilleurRegimeParObjectif($objectif)
+    {
+        $builder = $this->db->table('regimes_officiels');
+        $builder->select('regimes_officiels.*, COUNT(regimes_choisis.regime_id) as popularite')
+                ->join('regimes_choisis', 'regimes_choisis.regime_id = regimes_officiels.id', 'left')
+                ->where('regimes_officiels.objectif', $objectif)
+                ->groupBy('regimes_officiels.id')
+                ->orderBy('popularite', 'DESC')
+                ->limit(1);
+
+        $query = $builder->get();
+        $result = $query->getRowArray();
+
+        // Si aucune statistique, retourner le premier régime de l'objectif
+        if (!$result) {
+            return $this->where('objectif', $objectif)->first();
+        }
+
+        return $result;
+    }
 }
