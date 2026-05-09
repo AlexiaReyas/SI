@@ -157,3 +157,21 @@ INSERT INTO `regime_sports` (`regime_id`, `sport_id`, `duree_recommandee_minutes
 (3, 3, 60, 3),
 (4, 1, 30, 3),
 (5, 5, 60, 4);
+
+INSERT INTO `codes_promo` (code, valeur, type, utilisations_max, date_expiration) VALUES
+('BIENVENUE10', 10.00, 'argent', 100, '2026-12-31'),
+('GOLD50', 9.99, 'gold', 50, '2026-12-31'),
+('SPECIAL5', 5.00, 'argent', 1, '2026-06-30'),
+('ETE2025', 8.00, 'argent', 200, '2026-09-30'),
+('AMIPARRAIN', 15.00, 'argent', 10, '2026-12-31'),
+('SPORTIF20', 20.00, 'argent', 5, '2026-08-31'),
+('NOEL2026', 25.00, 'argent', 1000, '2026-12-25'),
+('REGIME10', 10.00, 'argent', 30, '2026-11-30'),
+('GOLDGRATUIT', 0.00, 'gold', 3, '2026-05-15'),
+('PROMO5', 5.00, 'argent', 50, '2026-05-30'),
+('JUILLET2026', 7.50, 'argent', 20, '2026-07-31'),
+('AOUT2026', 7.50, 'argent', 20, '2026-08-31'),
+('SEPT2026', 10.00, 'argent', 20, '2026-09-30'),
+('OCT2026', 10.00, 'argent', 20, '2026-10-31'),
+('NOV2026', 12.00, 'argent', 20, '2026-11-30');
+
