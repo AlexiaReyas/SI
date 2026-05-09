@@ -32,12 +32,26 @@ class WalletController extends BaseController
 
         $codeValue = trim((string) $this->request->getPost('code'));
         if ($codeValue === '') {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Code obligatoire.',
+                ]);
+            }
+
             return redirect()->to('/wallet')->with('error', 'Code obligatoire.');
         }
 
         $codeModel = new CodeModel();
         $code = $codeModel->where('code', $codeValue)->first();
         if (!$code || (int) $code['is_valid'] !== 1) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Code invalide ou deja utilise.',
+                ]);
+            }
+
             return redirect()->to('/wallet')->with('error', 'Code invalide ou deja utilise.');
         }
 
@@ -60,6 +74,14 @@ class WalletController extends BaseController
             'type' => 'wallet',
             'created_at' => date('Y-m-d H:i:s'),
         ]);
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Code applique avec succes.',
+                'balance' => $newWallet,
+            ]);
+        }
 
         return redirect()->to('/wallet')->with('success', 'Code applique.');
     }
