@@ -83,4 +83,3 @@ CREATE TABLE `utilisation_codes` (
   FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`code_id`) REFERENCES `codes_promo`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
