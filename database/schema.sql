@@ -62,6 +62,42 @@ CREATE TABLE `regime_sports` (
   FOREIGN KEY (`sport_id`) REFERENCES `sports`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `portemonnaie` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `solde` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `dernier_ajout` DATETIME,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_portemonnaie_user` (`user_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `achats_gold` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `date_achat` DATE NOT NULL DEFAULT CURRENT_DATE,
+  `montant_paye` DECIMAL(10,2),
+  `mode_paiement` VARCHAR(50),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `parametres` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cle` VARCHAR(50) NOT NULL,
+  `valeur` VARCHAR(255),
+  `description` TEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_parametres_cle` (`cle`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `parametres` (`cle`, `valeur`, `description`) VALUES
+('prix_gold', '9.99', 'Prix de l''option Gold'),
+('remise_gold', '15', 'Pourcentage de remise pour les membres Gold'),
+('imc_min_normal', '18.5', 'IMC minimum pour poids normal'),
+('imc_max_normal', '24.9', 'IMC maximum pour poids normal');
+
+
 CREATE TABLE `codes_promo` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(50) NOT NULL,
