@@ -175,3 +175,26 @@ INSERT INTO `codes_promo` (code, valeur, type, utilisations_max, date_expiration
 ('OCT2026', 10.00, 'argent', 20, '2026-10-31'),
 ('NOV2026', 12.00, 'argent', 20, '2026-11-30');
 
+CREATE TABLE IF NOT EXISTS `mesures_utilisateur` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `date_mesure` DATE,
+  `poids` DECIMAL(5,2),
+  `imc_calcule` DECIMAL(4,2),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `mesures_utilisateur` (`user_id`, `date_mesure`, `poids`, `imc_calcule`) VALUES
+(1, '2026-01-15', 58.00, 21.30),
+(1, '2026-02-15', 57.50, 21.12),
+(1, '2026-03-15', 58.00, 21.30),
+(1, '2026-04-15', 58.50, 21.48),
+(1, '2026-05-01', 58.00, 21.30);
+
+INSERT INTO `mesures_utilisateur` (`user_id`, `date_mesure`, `poids`, `imc_calcule`) VALUES
+(2, '2026-02-20', 85.00, 26.23),
+(2, '2026-03-20', 84.00, 25.93),
+(2, '2026-04-20', 83.00, 25.62),
+(2, '2026-05-01', 82.50, 25.46);
+
