@@ -41,3 +41,45 @@ CREATE TABLE `composition_regime_officiel` (
   CHECK ((`pourcentage_viande` + `pourcentage_poisson` + `pourcentage_volaille`) = 100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `sports` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nom` VARCHAR(100) NOT NULL,
+  `calories_par_heure` INT,
+  `difficulte` VARCHAR(20),
+  `description` TEXT,
+  PRIMARY KEY (`id`),
+  CHECK (`difficulte` IN ('Facile', 'Moyen', 'Difficile'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `regime_sports` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `regime_id` INT UNSIGNED NOT NULL,
+  `sport_id` INT UNSIGNED NOT NULL,
+  `duree_recommandee_minutes` INT,
+  `jours_par_semaine` INT,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`regime_id`) REFERENCES `regimes_officiels`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`sport_id`) REFERENCES `sports`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `codes_promo` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(50) NOT NULL,
+  `valeur` DECIMAL(10,2) NOT NULL,
+  `type` VARCHAR(20) NOT NULL DEFAULT 'argent',
+  `utilisations_max` INT NOT NULL DEFAULT 1,
+  `utilisations_actuelles` INT NOT NULL DEFAULT 0,
+  `date_expiration` DATE NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_codes_promo_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `utilisation_codes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `code_id` INT UNSIGNED NOT NULL,
+  `date_utilisation` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`code_id`) REFERENCES `codes_promo`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
