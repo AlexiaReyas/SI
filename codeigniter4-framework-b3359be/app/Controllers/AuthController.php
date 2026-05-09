@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
+
 class AuthController extends BaseController
 {
     public function login(): string
@@ -18,13 +20,22 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Email et mot de passe requis.');
         }
 
-        // Placeholder auth: replace with model check later.
-        session()->set([
-            'user_email' => $email,
+        $user = (new UserModel())->findByEmail($email);
+
+        if (! $user || ! password_verify($password, (string) $user['mot_de_passe'])) {
+            return redirect()->back()->with('error', 'Identifiants invalides.');
+        }
+
+        $this->session->set([
+            'user_id' => (int) $user['id'],
+            'user_name' => (string) $user['nom'],
+            'user_email' => (string) $user['email'],
+            'is_admin' => 0,
+            'is_gold' => (int) ($user['est_gold'] ?? 0),
             'is_logged_in' => true,
         ]);
 
-        return redirect()->to('/dashboard')->with('success', 'Connexion reussie.');
+        return redirect()->to('/profile')->with('success', 'Connexion reussie.');
     }
 
     public function registerStep1(): string
@@ -41,7 +52,7 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Nom et email requis.');
         }
 
-        session()->set([
+        $this->session->set([
             'reg_name' => $name,
             'reg_email' => $email,
         ]);
@@ -63,19 +74,47 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Mot de passe invalide.');
         }
 
-        // Placeholder user creation: replace with model insert later.
-        session()->set([
-            'user_email' => (string) session()->get('reg_email'),
+        $name = (string) $this->session->get('reg_name');
+        $email = (string) $this->session->get('reg_email');
+
+        if ($name === '' || $email === '') {
+            return redirect()->to('/register-step1')->with('error', 'Veuillez recommencer l\'inscription.');
+        }
+
+        $userModel = new UserModel();
+
+        if ($userModel->findByEmail($email)) {
+            return redirect()->to('/register-step1')->with('error', 'Cet email existe deja.');
+        }
+
+        $userId = $userModel->insert([
+            'nom' => $name,
+            'email' => $email,
+            'mot_de_passe' => password_hash($password, PASSWORD_DEFAULT),
+            'genre' => null,
+            'taille' => null,
+            'poids_initial' => null,
+            'est_gold' => 0,
+            'date_inscription' => date('Y-m-d H:i:s'),
+        ], true);
+
+        $this->session->remove(['reg_name', 'reg_email']);
+
+        $this->session->set([
+            'user_id' => (int) $userId,
+            'user_name' => $name,
+            'user_email' => $email,
+            'is_admin' => 0,
+            'is_gold' => 0,
             'is_logged_in' => true,
         ]);
-        session()->remove(['reg_name', 'reg_email']);
 
-        return redirect()->to('/dashboard')->with('success', 'Inscription terminee.');
+        return redirect()->to('/profile')->with('success', 'Inscription terminee.');
     }
 
     public function logout()
     {
-        session()->destroy();
+        $this->session->destroy();
 
         return redirect()->to('/login');
     }
