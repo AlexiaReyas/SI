@@ -16,7 +16,7 @@
                 
                 <div class="mb-3">
                     <label for="nom" class="form-label text-light">Nom complet</label>
-                    <input type="text" class="form-control" id="nom" name="nom" required placeholder="Ex: Jean Dupont">
+                    <input type="text" class="form-control" id="nom" name="name" required placeholder="Ex: Jean Dupont">
                 </div>
 
                 <div class="mb-3">
@@ -26,7 +26,7 @@
                 
                 <div class="mb-3">
                     <label for="genre" class="form-label text-light">Genre</label>
-                    <select class="form-select" id="genre" name="genre" required>
+                    <select class="form-select" id="genre" name="gender" required>
                         <option value="" disabled selected>Choisissez votre genre...</option>
                         <option value="M">Homme</option>
                         <option value="F">Femme</option>

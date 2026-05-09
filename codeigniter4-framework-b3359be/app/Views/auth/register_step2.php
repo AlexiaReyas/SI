@@ -18,7 +18,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="taille" class="form-label text-light">Taille (cm)</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="taille" name="taille" required min="100" max="250" placeholder="Ex: 175">
+                            <input type="number" class="form-control" id="taille" name="height_cm" required min="100" max="250" placeholder="Ex: 175">
                             <span class="input-group-text bg-dark text-muted border-secondary">cm</span>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="poids" class="form-label text-light">Poids (kg)</label>
                         <div class="input-group">
-                            <input type="number" step="0.1" class="form-control" id="poids" name="poids" required min="30" max="300" placeholder="Ex: 70">
+                            <input type="number" step="0.1" class="form-control" id="poids" name="weight_kg" required min="30" max="300" placeholder="Ex: 70">
                             <span class="input-group-text bg-dark text-muted border-secondary">kg</span>
                         </div>
                     </div>
