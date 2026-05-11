@@ -20,22 +20,24 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Email et mot de passe requis.');
         }
 
-        $user = (new UserModel())->findByEmail($email);
+        $user = (new UserModel())
+            ->where('email', $email)
+            ->first();
 
-        if (! $user || ! password_verify($password, (string) $user['mot_de_passe'])) {
+        if (! $user || ! password_verify($password, (string) $user['password_hash'])) {
             return redirect()->back()->with('error', 'Identifiants invalides.');
         }
 
         $this->session->set([
-            'user_id' => (int) $user['id'],
-            'user_name' => (string) $user['nom'],
-            'user_email' => (string) $user['email'],
-            'is_admin' => 0,
-            'is_gold' => (int) ($user['est_gold'] ?? 0),
+            'user_id' => $user['id'],
+            'user_name' => $user['name'],
+            'user_email' => $user['email'],
+            'is_admin' => (int) ($user['is_admin'] ?? 0),
+            'is_gold' => (int) ($user['gold'] ?? 0),
             'is_logged_in' => true,
         ]);
 
-        return redirect()->to('/profile')->with('success', 'Connexion reussie.');
+        return redirect()->to('/')->with('success', 'Connexion reussie.');
     }
 
     public function registerStep1(): string
@@ -78,30 +80,29 @@ class AuthController extends BaseController
         $email = (string) $this->session->get('reg_email');
 
         if ($name === '' || $email === '') {
-            return redirect()->to('/register-step1')->with('error', 'Veuillez recommencer l\'inscription.');
+            return redirect()->to('/register/step1')->with('error', 'Veuillez recommencer l\'inscription.');
         }
 
         $userModel = new UserModel();
 
-        if ($userModel->findByEmail($email)) {
-            return redirect()->to('/register-step1')->with('error', 'Cet email existe deja.');
+        if ($userModel->where('email', $email)->first()) {
+            return redirect()->to('/register/step1')->with('error', 'Cet email existe deja.');
         }
 
         $userId = $userModel->insert([
-            'nom' => $name,
+            'name' => $name,
             'email' => $email,
-            'mot_de_passe' => password_hash($password, PASSWORD_DEFAULT),
-            'genre' => null,
-            'taille' => null,
-            'poids_initial' => null,
-            'est_gold' => 0,
-            'date_inscription' => date('Y-m-d H:i:s'),
+            'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+            'gender' => null,
+            'is_admin' => 0,
+            'gold' => 0,
+            'wallet' => 0,
         ], true);
 
         $this->session->remove(['reg_name', 'reg_email']);
 
         $this->session->set([
-            'user_id' => (int) $userId,
+            'user_id' => $userId,
             'user_name' => $name,
             'user_email' => $email,
             'is_admin' => 0,
@@ -109,7 +110,7 @@ class AuthController extends BaseController
             'is_logged_in' => true,
         ]);
 
-        return redirect()->to('/profile')->with('success', 'Inscription terminee.');
+        return redirect()->to('/')->with('success', 'Inscription terminee.');
     }
 
     public function logout()
