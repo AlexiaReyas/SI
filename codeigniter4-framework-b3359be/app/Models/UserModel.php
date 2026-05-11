@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\BaseMockModel;
 
-class UserModel extends Model
+class UserModel extends BaseMockModel
 {
     protected $table = 'users';
     protected $primaryKey = 'id';

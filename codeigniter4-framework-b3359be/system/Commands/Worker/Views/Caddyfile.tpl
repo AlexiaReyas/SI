@@ -29,7 +29,7 @@
 }
 
 # HTTP server configuration
-:8080 {
+:9090 {
     # Document root
     root * public
 
