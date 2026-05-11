@@ -12,6 +12,8 @@ use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
+use App\Filters\AuthFilter;
+use App\Filters\AdminFilter;
 
 class Filters extends BaseFilters
 {
@@ -34,6 +36,8 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'auth'          => AuthFilter::class,
+        'admin'         => AdminFilter::class,
     ];
 
     /**
@@ -106,5 +110,23 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'auth' => [
+            'before' => [
+                'profile',
+                'objectives',
+                'recommendations',
+                'wallet',
+                'wallet/*',
+                'gold',
+                'gold/*',
+            ],
+        ],
+        'admin' => [
+            'before' => [
+                'admin',
+                'admin/*',
+            ],
+        ],
+    ];
 }

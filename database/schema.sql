@@ -140,3 +140,61 @@ INSERT INTO `composition_regime_officiel` (`regime_id`, `pourcentage_viande`, `p
 (3, 30, 50, 20),
 (4, 35, 45, 20),
 (5, 60, 20, 20);
+
+INSERT INTO `sports` (`nom`, `calories_par_heure`, `difficulte`, `description`) VALUES
+('Marche rapide', 250, 'Facile', 'Idéal pour débuter, accessible à tous'),
+('Course à pied', 600, 'Moyen', 'Excellent pour brûler des calories'),
+('Natation', 500, 'Moyen', 'Sport complet, doux pour les articulations'),
+('Vélo', 400, 'Facile', 'Bon pour l''endurance'),
+('Musculation', 350, 'Difficile', 'Pour prendre du muscle');
+
+INSERT INTO `regime_sports` (`regime_id`, `sport_id`, `duree_recommandee_minutes`, `jours_par_semaine`) VALUES
+(1, 5, 45, 3),
+(1, 4, 30, 2),
+(2, 1, 30, 5),
+(2, 3, 40, 2),
+(3, 2, 45, 4),
+(3, 3, 60, 3),
+(4, 1, 30, 3),
+(5, 5, 60, 4);
+
+INSERT INTO `codes_promo` (code, valeur, type, utilisations_max, date_expiration) VALUES
+('BIENVENUE10', 10.00, 'argent', 100, '2026-12-31'),
+('GOLD50', 9.99, 'gold', 50, '2026-12-31'),
+('SPECIAL5', 5.00, 'argent', 1, '2026-06-30'),
+('ETE2025', 8.00, 'argent', 200, '2026-09-30'),
+('AMIPARRAIN', 15.00, 'argent', 10, '2026-12-31'),
+('SPORTIF20', 20.00, 'argent', 5, '2026-08-31'),
+('NOEL2026', 25.00, 'argent', 1000, '2026-12-25'),
+('REGIME10', 10.00, 'argent', 30, '2026-11-30'),
+('GOLDGRATUIT', 0.00, 'gold', 3, '2026-05-15'),
+('PROMO5', 5.00, 'argent', 50, '2026-05-30'),
+('JUILLET2026', 7.50, 'argent', 20, '2026-07-31'),
+('AOUT2026', 7.50, 'argent', 20, '2026-08-31'),
+('SEPT2026', 10.00, 'argent', 20, '2026-09-30'),
+('OCT2026', 10.00, 'argent', 20, '2026-10-31'),
+('NOV2026', 12.00, 'argent', 20, '2026-11-30');
+
+CREATE TABLE IF NOT EXISTS `mesures_utilisateur` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `date_mesure` DATE,
+  `poids` DECIMAL(5,2),
+  `imc_calcule` DECIMAL(4,2),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `utilisateurs`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `mesures_utilisateur` (`user_id`, `date_mesure`, `poids`, `imc_calcule`) VALUES
+(1, '2026-01-15', 58.00, 21.30),
+(1, '2026-02-15', 57.50, 21.12),
+(1, '2026-03-15', 58.00, 21.30),
+(1, '2026-04-15', 58.50, 21.48),
+(1, '2026-05-01', 58.00, 21.30);
+
+INSERT INTO `mesures_utilisateur` (`user_id`, `date_mesure`, `poids`, `imc_calcule`) VALUES
+(2, '2026-02-20', 85.00, 26.23),
+(2, '2026-03-20', 84.00, 25.93),
+(2, '2026-04-20', 83.00, 25.62),
+(2, '2026-05-01', 82.50, 25.46);
+

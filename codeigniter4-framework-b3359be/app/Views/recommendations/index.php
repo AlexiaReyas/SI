@@ -21,7 +21,7 @@
             <?php if(empty($regimes)): ?>
                 <p class="text-center text-muted">Aucun régime suggéré pour le moment.</p>
             <?php else: ?>
-                <?php foreach($regimes as $regime): ?>
+                <?php foreach ($regimes as $regime): ?>
                 <div class="bg-dark p-3 rounded mb-3 border border-secondary">
                     <h5 class="text-light"><?= esc($regime['nom']) ?></h5>
                     <p class="small text-muted mb-2"><?= esc($regime['description']) ?></p>
@@ -31,7 +31,7 @@
                         <span class="badge bg-warning text-dark"><i class="fa-solid fa-drumstick-bite me-1"></i>Volaille: <?= esc($regime['volaille_pct']) ?>%</span>
                     </div>
                 </div>
-                <?php end/foreach; ?>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>
@@ -46,13 +46,13 @@
             <?php if(empty($activites)): ?>
                 <p class="text-center text-muted">Aucune activité suggérée pour le moment.</p>
             <?php else: ?>
-                <?php foreach($activites as $activite): ?>
+                <?php foreach ($activites as $activite): ?>
                 <div class="bg-dark p-3 rounded mb-3 border border-secondary">
                     <h5 class="text-light"><?= esc($activite['nom']) ?></h5>
                     <p class="small text-muted mb-2"><?= esc($activite['description']) ?></p>
-                    <span class="badge bg-primary"><i class="fa-solid fa-fire me-1"></i>Impact estimé: Élevé</span>
+                    <span class="badge bg-primary"><i class="fa-solid fa-fire me-1"></i>Durée: <?= esc($activite['duration_minutes']) ?> min</span>
                 </div>
-                <?php end/foreach; ?>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>
