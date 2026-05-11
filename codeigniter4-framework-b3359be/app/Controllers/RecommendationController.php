@@ -24,7 +24,12 @@ class RecommendationController extends BaseController
             return redirect()->to('/profile')->with('error', 'Profil incomplet.');
         }
 
-        $imc = (float) $health['imc'];
+        $weight = isset($health['weight_kg']) ? (float) $health['weight_kg'] : 0.0;
+        $height = isset($health['height_cm']) ? (float) $health['height_cm'] : 0.0;
+        $imc = (isset($health['imc']) && (float) $health['imc'] > 0)
+            ? (float) $health['imc']
+            : (($weight > 0.0 && $height > 0.0) ? round($weight / (($height / 100) ** 2), 2) : 0.0);
+
         $settings = $this->getSettings();
         $goal = $this->decideGoal($userId, $imc, $settings['imc_min'], $settings['imc_max']);
 
