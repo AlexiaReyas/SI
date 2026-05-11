@@ -9,13 +9,13 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'AuthController::login');
 
 $routes->get('login', 'AuthController::login');
-$routes->post('login', 'AuthController::attempt');
+$routes->post('login', 'AuthController::loginPost');
 $routes->get('logout', 'AuthController::logout');
 
-$routes->get('register-step1', 'RegisterController::step1');
-$routes->post('register-step1', 'RegisterController::step1Save');
-$routes->get('register-step2', 'RegisterController::step2');
-$routes->post('register-step2', 'RegisterController::step2Save');
+$routes->get('register-step1', 'AuthController::registerStep1');
+$routes->post('register-step1', 'AuthController::registerStep1Post');
+$routes->get('register-step2', 'AuthController::registerStep2');
+$routes->post('register-step2', 'AuthController::registerStep2Post');
 
 $routes->get('profile', 'ProfileController::index');
 $routes->post('profile', 'ProfileController::save');

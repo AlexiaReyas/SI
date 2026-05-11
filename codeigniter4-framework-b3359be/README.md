@@ -59,3 +59,21 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 - json (enabled by default - don't turn it off)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
 - [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+
+## Midera - Backend & Logique metier
+
+### Etape 1 - Session + vraie base de donnees
+Objectif : connecter le login/inscription a la vraie base de donnees avec mots de passe haches et session fonctionnelle.
+
+1. Creer ou verifier le `UserModel` avec les champs utiles pour le login.
+2. Remplacer la logique temporaire du `AuthController` par une verification en base de donnees.
+3. Utiliser `password_hash()` a l'inscription et `password_verify()` a la connexion.
+4. Stocker les donnees utiles dans la session apres login reussi.
+5. Verifier que la redirection fonctionne selon le profil de l'utilisateur.
+6. Ouvrir GitHub Desktop.
+7. Verifier les changements detectes.
+8. Summary : ecrire `Etape 1 - Session et vraie DB`.
+9. Commit to main.
+10. Push origin.
+
+Stop ici. Ne pas commencer l'etape 2 tant que l'etape 1 n'est pas poussee sur GitHub.
