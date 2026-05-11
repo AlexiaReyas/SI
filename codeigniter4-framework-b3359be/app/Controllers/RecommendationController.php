@@ -34,7 +34,7 @@ class RecommendationController extends BaseController
         $goal = $this->decideGoal($userId, $imc, $settings['imc_min'], $settings['imc_max']);
 
         $regimes = $this->getRegimeSuggestions($goal);
-        $activites = $this->getActivitySuggestions($goal, $imc);
+        $activities = $this->getActivitySuggestions($goal, $imc);
 
         $user = (new UserModel())->find($userId);
         $price = $regimes !== [] ? (float) ($regimes[0]['base_price'] ?? 0.0) : 0.0;
@@ -49,7 +49,8 @@ class RecommendationController extends BaseController
                 'objectif_label' => $this->goalLabel($goal),
             ],
             'regimes' => $regimes,
-            'activites' => $activites,
+            'activites' => $activities,
+            'goal' => $goal,
             'price' => $price,
             'discount' => $discount,
             'finalPrice' => max($price - $discount, 0),
@@ -129,9 +130,11 @@ class RecommendationController extends BaseController
 
         return array_map(static function (array $row): array {
             return [
+                'id' => $row['id'],
                 'nom' => $row['name'],
                 'description' => $row['description'],
                 'base_price' => (float) $row['base_price'],
+                'weight_change_kg' => (float) $row['weight_change_kg'],
                 'viande_pct' => (float) $row['pct_meat'],
                 'poisson_pct' => (float) $row['pct_fish'],
                 'volaille_pct' => (float) $row['pct_poultry'],
@@ -153,6 +156,7 @@ class RecommendationController extends BaseController
 
         return array_map(static function (array $row): array {
             return [
+                'id' => $row['id'],
                 'nom' => $row['name'],
                 'description' => $row['description'],
                 'duration_minutes' => (int) $row['duration_minutes'],
@@ -164,8 +168,8 @@ class RecommendationController extends BaseController
     {
         return match ($goal) {
             'gain' => 'Augmenter',
-            'loss' => 'Réduire',
-            default => 'Atteindre l\'IMC idéal',
+            'loss' => 'Reduire',
+            default => 'Atteindre l\'IMC ideal',
         };
     }
 }
