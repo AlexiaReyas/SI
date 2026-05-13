@@ -45,3 +45,26 @@
     <?php endif; ?>
 </body>
 </html>
+
+<script>
+// Theme toggle: remember choice in localStorage
+(function(){
+    try {
+        const body = document.documentElement;
+        const btn = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        const stored = localStorage.getItem('siteTheme');
+        if (stored === 'light') {
+            body.classList.add('theme-light');
+            if (icon) icon.className = 'fa-solid fa-sun';
+        }
+        if (btn) btn.addEventListener('click', function(){
+            const isLight = body.classList.toggle('theme-light');
+            localStorage.setItem('siteTheme', isLight ? 'light' : 'dark');
+            if (icon) icon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        });
+    } catch (e) {
+        console.warn('Theme toggle failed', e);
+    }
+})();
+</script>

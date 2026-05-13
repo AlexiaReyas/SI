@@ -31,18 +31,43 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <?php if(session()->get('isLoggedIn')): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url('dashboard') ?>">Tableau de bord</a>
-                        </li>
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <button id="themeToggle" class="btn theme-toggle" title="Changer le thème">
+                            <i id="themeIcon" class="fa-solid fa-moon"></i>
+                        </button>
+                    </li>
+                    <?php if (session()->get('user_id')): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= base_url('profile') ?>">Profil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= base_url('objectives') ?>">Objectifs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= base_url('recommendations') ?>">Suggestions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= base_url('wallet') ?>">Porte-monnaie</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-warning" href="<?= base_url('gold') ?>">
                                 <i class="fa-solid fa-crown"></i> Mode Gold
                             </a>
                         </li>
+                        <?php if (session()->get('is_admin')): ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" href="<?= base_url('admin') ?>">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/regimes') ?>">Regimes</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/activities') ?>">Activites</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/codes') ?>">Codes promo</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/settings') ?>">Parametres</a></li>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= base_url('logout') ?>">Déconnexion</a>
                         </li>
@@ -51,7 +76,10 @@
                             <a class="nav-link" href="<?= base_url('login') ?>">Connexion</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-gold ms-2 px-4" href="<?= base_url('register-step1') ?>">S'inscrire</a>
+                            <a class="nav-link" href="<?= base_url('register-step1') ?>">Inscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= base_url('register-step2') ?>">Inscription (Etape 2)</a>
                         </li>
                     <?php endif; ?>
                 </ul>
