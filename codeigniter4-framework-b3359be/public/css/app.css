@@ -7,6 +7,16 @@
     --text-muted: #B3B3B3;
 }
 
+/* Light theme variables (clinic / sport feel) */
+.theme-light {
+    --gold-primary: #0d6efd; /* primary blue for clinical feel */
+    --gold-hover: #0b5ed7;
+    --dark-bg: #f7fbff;
+    --dark-surface: #ffffff;
+    --text-main: #0b2447;
+    --text-muted: #6c757d;
+}
+
 body {
     background-color: var(--dark-bg);
     color: var(--text-main);
@@ -154,4 +164,18 @@ h1, h2, h3, h4, h5, h6 {
         margin-right: 18px;
     }
 >>>>>>> front
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-main);
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.theme-light .theme-toggle {
+    border-color: rgba(13,110,253,0.12);
+    color: var(--text-main);
 }

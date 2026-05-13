@@ -57,6 +57,75 @@ class RecommendationController extends BaseController
         ]);
     }
 
+    public function exportPdf()
+    {
+        $guard = $this->requireLogin();
+        if ($guard) {
+            return $guard;
+        }
+
+        $userId = (int) $this->session->get('user_id');
+        $health = (new HealthModel())->where('user_id', $userId)->first();
+        if (!$health) {
+            return redirect()->to('/profile')->with('error', 'Profil incomplet.');
+        }
+
+        $imc = (float) $health['imc'];
+        $settings = $this->getSettings();
+        $goal = $this->decideGoal($userId, $imc, $settings['imc_min'], $settings['imc_max']);
+
+        $regimeModel = new RegimeModel();
+        if ($goal === 'gain') {
+            $regime = $regimeModel->where('weight_change_kg >', 0)->first();
+        } elseif ($goal === 'loss') {
+            $regime = $regimeModel->where('weight_change_kg <', 0)->first();
+        } else {
+            $regime = $regimeModel
+                ->where('weight_change_kg >=', -0.5)
+                ->where('weight_change_kg <=', 0.5)
+                ->first();
+        }
+
+        if (!$regime) {
+            $regime = $regimeModel->first();
+        }
+
+        $activity = (new ActivityModel())->first();
+
+        $user = (new UserModel())->find($userId);
+        $price = $regime ? (float) $regime['base_price'] : 0.0;
+        $discount = 0.0;
+        if ($user && (int) $user['gold'] === 1) {
+            $discount = round($price * 0.15, 2);
+        }
+
+        $data = [
+            'imc' => $imc,
+            'goal' => $goal,
+            'regime' => $regime,
+            'activity' => $activity,
+            'price' => $price,
+            'discount' => $discount,
+            'finalPrice' => max($price - $discount, 0),
+        ];
+
+        $html = view('recommendations/pdf', $data);
+
+        if (class_exists('Dompdf\\Dompdf')) {
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+
+            return $this->response
+                ->setHeader('Content-Type', 'application/pdf')
+                ->setHeader('Content-Disposition', 'inline; filename="recommendations.pdf"')
+                ->setBody($dompdf->output());
+        }
+
+        return $this->response->setBody($html);
+    }
+
     private function decideGoal(int $userId, float $imc, float $imcMin, float $imcMax): string
     {
         $objectives = (new ObjectiveModel())

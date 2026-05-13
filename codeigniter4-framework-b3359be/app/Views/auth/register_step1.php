@@ -29,8 +29,9 @@
                     <label for="genre" class="form-label text-light">Genre</label>
                     <select class="form-select" id="genre" name="gender" required>
                         <option value="" disabled selected>Choisissez votre genre...</option>
-                        <option value="M">Homme</option>
-                        <option value="F">Femme</option>
+                        <option value="homme">Homme</option>
+                        <option value="femme">Femme</option>
+                        <option value="autre">Autre</option>
                     </select>
                 </div>
 

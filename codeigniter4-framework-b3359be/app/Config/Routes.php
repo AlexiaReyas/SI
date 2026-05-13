@@ -24,6 +24,7 @@ $routes->get('objectives', 'ObjectiveController::index');
 $routes->post('objectives', 'ObjectiveController::save');
 
 $routes->get('recommendations', 'RecommendationController::index');
+$routes->get('recommendations/export_pdf', 'RecommendationController::exportPdf');
 
 $routes->get('wallet', 'WalletController::index');
 $routes->post('wallet', 'WalletController::applyCode');
