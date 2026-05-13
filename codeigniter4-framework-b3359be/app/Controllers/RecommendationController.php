@@ -24,40 +24,33 @@ class RecommendationController extends BaseController
             return redirect()->to('/profile')->with('error', 'Profil incomplet.');
         }
 
-        $imc = (float) $health['imc'];
+        $weight = isset($health['weight_kg']) ? (float) $health['weight_kg'] : 0.0;
+        $height = isset($health['height_cm']) ? (float) $health['height_cm'] : 0.0;
+        $imc = (isset($health['imc']) && (float) $health['imc'] > 0)
+            ? (float) $health['imc']
+            : (($weight > 0.0 && $height > 0.0) ? round($weight / (($height / 100) ** 2), 2) : 0.0);
+
         $settings = $this->getSettings();
         $goal = $this->decideGoal($userId, $imc, $settings['imc_min'], $settings['imc_max']);
 
-        $regimeModel = new RegimeModel();
-        if ($goal === 'gain') {
-            $regime = $regimeModel->where('weight_change_kg >', 0)->first();
-        } elseif ($goal === 'loss') {
-            $regime = $regimeModel->where('weight_change_kg <', 0)->first();
-        } else {
-            $regime = $regimeModel
-                ->where('weight_change_kg >=', -0.5)
-                ->where('weight_change_kg <=', 0.5)
-                ->first();
-        }
-
-        if (!$regime) {
-            $regime = $regimeModel->first();
-        }
-
-        $activity = (new ActivityModel())->first();
+        $regimes = $this->getRegimeSuggestions($goal);
+        $activities = $this->getActivitySuggestions($goal, $imc);
 
         $user = (new UserModel())->find($userId);
-        $price = $regime ? (float) $regime['base_price'] : 0.0;
+        $price = $regimes !== [] ? (float) ($regimes[0]['base_price'] ?? 0.0) : 0.0;
         $discount = 0.0;
         if ($user && (int) $user['gold'] === 1) {
             $discount = round($price * 0.15, 2);
         }
 
         return view('recommendations/index', [
-            'imc' => $imc,
+            'user' => [
+                'imc' => $imc,
+                'objectif_label' => $this->goalLabel($goal),
+            ],
+            'regimes' => $regimes,
+            'activites' => $activities,
             'goal' => $goal,
-            'regime' => $regime,
-            'activity' => $activity,
             'price' => $price,
             'discount' => $discount,
             'finalPrice' => max($price - $discount, 0),
@@ -175,5 +168,77 @@ class RecommendationController extends BaseController
             'imc_min' => isset($map['imc_min_normal']) ? (float) $map['imc_min_normal'] : 18.5,
             'imc_max' => isset($map['imc_max_normal']) ? (float) $map['imc_max_normal'] : 24.9,
         ];
+    }
+
+    private function getRegimeSuggestions(string $goal): array
+    {
+        $model = new RegimeModel();
+
+        switch ($goal) {
+            case 'gain':
+                $rows = $model->where('weight_change_kg >', 0)
+                    ->orderBy('weight_change_kg', 'DESC')
+                    ->findAll(3);
+                break;
+            case 'loss':
+                $rows = $model->where('weight_change_kg <', 0)
+                    ->orderBy('weight_change_kg', 'ASC')
+                    ->findAll(3);
+                break;
+            default:
+                $rows = $model->where('weight_change_kg >=', -0.5)
+                    ->where('weight_change_kg <=', 0.5)
+                    ->orderBy('base_price', 'ASC')
+                    ->findAll(3);
+                break;
+        }
+
+        if ($rows === []) {
+            $rows = $model->orderBy('base_price', 'ASC')->findAll(3);
+        }
+
+        return array_map(static function (array $row): array {
+            return [
+                'id' => $row['id'],
+                'nom' => $row['name'],
+                'description' => $row['description'],
+                'base_price' => (float) $row['base_price'],
+                'weight_change_kg' => (float) $row['weight_change_kg'],
+                'viande_pct' => (float) $row['pct_meat'],
+                'poisson_pct' => (float) $row['pct_fish'],
+                'volaille_pct' => (float) $row['pct_poultry'],
+            ];
+        }, $rows);
+    }
+
+    private function getActivitySuggestions(string $goal, float $imc): array
+    {
+        $model = new ActivityModel();
+
+        if ($goal === 'loss' || $imc >= 25) {
+            $rows = $model->orderBy('duration_minutes', 'DESC')->findAll(3);
+        } elseif ($goal === 'gain') {
+            $rows = $model->orderBy('duration_minutes', 'ASC')->findAll(3);
+        } else {
+            $rows = $model->orderBy('name', 'ASC')->findAll(3);
+        }
+
+        return array_map(static function (array $row): array {
+            return [
+                'id' => $row['id'],
+                'nom' => $row['name'],
+                'description' => $row['description'],
+                'duration_minutes' => (int) $row['duration_minutes'],
+            ];
+        }, $rows);
+    }
+
+    private function goalLabel(string $goal): string
+    {
+        return match ($goal) {
+            'gain' => 'Augmenter',
+            'loss' => 'Reduire',
+            default => 'Atteindre l\'IMC ideal',
+        };
     }
 }

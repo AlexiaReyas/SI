@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\BaseMockModel;
 
-class RegimeModel extends Model
+class RegimeModel extends BaseMockModel
 {
     protected $table = 'regimes';
     protected $primaryKey = 'id';

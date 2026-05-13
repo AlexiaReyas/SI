@@ -1,4 +1,4 @@
-<?= view('partials/header', ['title' => 'Mon Profil - NutriFit']) ?>
+<?= view('partials/header', ['title' => 'Mon Profil - NutriFit', 'userName' => $user['name'] ?? null, 'path' => '/profile']) ?>
 
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">

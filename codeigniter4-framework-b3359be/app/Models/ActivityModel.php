@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\BaseMockModel;
 
-class ActivityModel extends Model
+class ActivityModel extends BaseMockModel
 {
     protected $table = 'activities';
     protected $primaryKey = 'id';

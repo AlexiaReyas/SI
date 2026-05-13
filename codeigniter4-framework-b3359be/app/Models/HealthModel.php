@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\BaseMockModel;
 
-class HealthModel extends Model
+class HealthModel extends BaseMockModel
 {
     protected $table = 'health';
     protected $primaryKey = 'id';
